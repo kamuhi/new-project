@@ -108,10 +108,10 @@ void PlayScene::Update(float elapsedTime)
 	const auto& kbTracker = m_commonResources->GetInputManager()->GetKeyboardTracker();
 
 	// スペースキーが押されたら
-	if (kbTracker->pressed.Space)
-	{
-		m_isChangeScene = true;
-	}
+	//if (kbTracker->pressed.Space)
+	//{
+	//	m_isChangeScene = true;
+	//}
 
 	//プレイヤー
 	m_player->Update();

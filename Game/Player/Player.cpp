@@ -62,7 +62,7 @@ void Player::Initialize(CommonResources* resources)
 	);
 
 	// ジオメトリックプリミティブを生成する
-	m_teapot = GeometricPrimitive::CreateBox(context,Vector3(1.0f));
+	m_teapot = GeometricPrimitive::CreateTeapot(context);
 
 	// 回転角を初期化する（度）
 	m_angle = 0.0f;
@@ -84,58 +84,52 @@ void Player::Update()
 	// 速さ
 	Vector3 velocity = Vector3::Zero;
 
-	//// 前後移動
-	//if (kbState.Up)
-	//{
-	//	if(m_position.z >= -FLOOR_SIZE)
-	//	velocity = Vector3::Forward;
-	//}
-	//else if (kbState.Down)
-	//{
-	//	if(m_position.z <= FLOOR_SIZE)
-	//	velocity = Vector3::Backward;
-	//}
+	// 前後移動
+	if (kbState.Up)
+	{
+		if(m_position.z >= -FLOOR_SIZE)
+		velocity = Vector3::Forward;
+	}
+	else if (kbState.Down)
+	{
+		if(m_position.z <= FLOOR_SIZE)
+		velocity = Vector3::Backward;
+	}
 
-	//// 左右回転
-	//if (kbState.Left)
-	//{
-	//	//if(m_position.x >= -FLOOR_SIZE)
-	//	//velocity = Vector3::Left;
-	//	if (kbState.Down)
-	//	{
-	//		m_angle--;
-	//	}
-	//	else
-	//	{
-	//		m_angle++;
-	//	}
-	//}
-	//else if (kbState.Right)
-	//{
-	//	//if(m_position.x <= FLOOR_SIZE)
-	//	//velocity = Vector3::Right;
+	// 左右回転
+	if (kbState.Left)
+	{
+		if(m_position.x >= -FLOOR_SIZE)
+		velocity = Vector3::Left;
+		//if (kbState.Down)
+		//{
+		//	m_angle--;
+		//}
+		//else
+		//{
+		//	m_angle++;
+		//}
+	}
+	else if (kbState.Right)
+	{
+		if(m_position.x <= FLOOR_SIZE)
+		velocity = Vector3::Right;
 
-	//	if (kbState.Down)
-	//	{
-	//		m_angle++;
-	//	}
-	//	else
-	//	{
-	//		m_angle--;
-	//	}
-	//}
-	velocity = Vector3::Forward;
+		//if (kbState.Down)
+		//{
+		//	m_angle++;
+		//}
+		//else
+		//{
+		//	m_angle--;
+		//}
+	}
+	//velocity = Vector3::Forward;
 	
 	// 速さを計算する
 	velocity *= SPEED;
 
 
-	// 座標と回転のリセット
-	if (tracker->IsKeyPressed(Keyboard::Space))
-	{
-		m_position = Vector3::Zero;
-		m_angle = 0.0f;
-	}
 
 	// 回転角の値を-180度<=m_angle<=180度に収める
 	m_angle = std::min(std::max(m_angle, -180.0f), 180.0f);
