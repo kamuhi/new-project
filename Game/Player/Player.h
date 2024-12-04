@@ -34,6 +34,9 @@ private:
 	// ‘¬‚³
 	static const float SPEED;
 
+	//ˆÚ“®§ŒÀ
+	static const float FLOOR_SIZE;
+
 public:
 	Player();
 	~Player();

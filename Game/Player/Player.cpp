@@ -20,6 +20,8 @@ using namespace DirectX::SimpleMath;
 // 定数
 const float Player::SPEED = 0.05f;
 
+const float Player::FLOOR_SIZE = 5.5f;
+
 Player::Player()
 	:
 	m_commonResources{},
@@ -60,13 +62,13 @@ void Player::Initialize(CommonResources* resources)
 	);
 
 	// ジオメトリックプリミティブを生成する
-	m_teapot = GeometricPrimitive::CreateTeapot(context);
+	m_teapot = GeometricPrimitive::CreateBox(context,Vector3(1.0f));
 
 	// 回転角を初期化する（度）
 	m_angle = 0.0f;
 
 	// 座標を初期化する
-	m_position = Vector3::Zero;
+	m_position = Vector3(-5.5f,0.0f,5.5f);
 }
 
 void Player::Update()
@@ -82,42 +84,51 @@ void Player::Update()
 	// 速さ
 	Vector3 velocity = Vector3::Zero;
 
-	// 前後移動
-	if (kbState.Up)
-	{
-		velocity = Vector3::Forward;
-	}
-	else if (kbState.Down)
-	{
-		velocity = Vector3::Backward;
-	}
+	//// 前後移動
+	//if (kbState.Up)
+	//{
+	//	if(m_position.z >= -FLOOR_SIZE)
+	//	velocity = Vector3::Forward;
+	//}
+	//else if (kbState.Down)
+	//{
+	//	if(m_position.z <= FLOOR_SIZE)
+	//	velocity = Vector3::Backward;
+	//}
 
+	//// 左右回転
+	//if (kbState.Left)
+	//{
+	//	//if(m_position.x >= -FLOOR_SIZE)
+	//	//velocity = Vector3::Left;
+	//	if (kbState.Down)
+	//	{
+	//		m_angle--;
+	//	}
+	//	else
+	//	{
+	//		m_angle++;
+	//	}
+	//}
+	//else if (kbState.Right)
+	//{
+	//	//if(m_position.x <= FLOOR_SIZE)
+	//	//velocity = Vector3::Right;
+
+	//	if (kbState.Down)
+	//	{
+	//		m_angle++;
+	//	}
+	//	else
+	//	{
+	//		m_angle--;
+	//	}
+	//}
+	velocity = Vector3::Forward;
+	
 	// 速さを計算する
 	velocity *= SPEED;
 
-	// 左右回転
-	if (kbState.Left)
-	{
-		if (kbState.Down)
-		{
-			m_angle--;
-		}
-		else
-		{
-			m_angle++;
-		}
-	}
-	else if (kbState.Right)
-	{
-		if (kbState.Down)
-		{
-			m_angle++;
-		}
-		else
-		{
-			m_angle--;
-		}
-	}
 
 	// 座標と回転のリセット
 	if (tracker->IsKeyPressed(Keyboard::Space))
@@ -147,6 +158,10 @@ void Player::Render()
 
 	// ジオメトリックプリミティブを描画する
 	m_teapot->Draw(world, view, m_projection, Colors::White);
+
+	// デバッグ情報を「DebugString」で表示する
+	auto debugString = m_commonResources->GetDebugString();
+	debugString->AddString("m_angle : %f",m_angle);
 
 }
 
