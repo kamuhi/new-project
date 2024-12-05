@@ -99,6 +99,9 @@
     <ClInclude Include="Game\Bullets\Bullets.h">
       <Filter>Game\Bullets</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\MyLib\UtilityMath.h">
+      <Filter>Libraries\MyLib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
