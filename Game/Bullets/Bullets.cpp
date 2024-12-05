@@ -18,7 +18,8 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 // 定数
-const float Bullets::SPEED = 0.05f;
+const float Bullets::SPEED = 0.5f;
+const float Bullets::FLOOR_SIZE = 6.0f;
 
 Bullets::Bullets()
 	:
@@ -76,7 +77,7 @@ void Bullets::Initialize(CommonResources* resources)
 	m_IsShoot = false;
 }
 
-void Bullets::Update(DirectX::SimpleMath::Vector3 position)
+void Bullets::Update(DirectX::SimpleMath::Vector3 position,float angle)
 {
 	// デバッグカメラを更新する
 	m_debugCamera->Update(m_commonResources->GetInputManager());
@@ -94,10 +95,19 @@ void Bullets::Update(DirectX::SimpleMath::Vector3 position)
 	if (m_IsShoot == false)
 	{
 		m_position = position;
+		m_angle = angle;
 	}
 	else if (m_IsShoot == true)
 	{
-		m_position += m_velocity;
+		// 移動ベクトルを計算し、座標に加算する
+		Matrix matrix = Matrix::CreateRotationY(XMConvertToRadians(m_angle));
+		m_position += Vector3::Transform(m_velocity, matrix);
+	}
+
+	if (m_position.z <= -FLOOR_SIZE || m_position.z >= FLOOR_SIZE ||
+		m_position.x <= -FLOOR_SIZE || m_position.x >= FLOOR_SIZE  )
+	{
+		m_IsShoot = false;
 	}
 	
 }

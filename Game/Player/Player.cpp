@@ -104,37 +104,37 @@ void Player::Update()
 	// ¶‰E‰ñ“]
 	if (kbState.Left)
 	{
-		if(m_position.x >= -FLOOR_SIZE)
-		velocity = Vector3::Left;
-		//if (kbState.Down)
-		//{
-		//	m_angle--;
-		//}
-		//else
-		//{
-		//	m_angle++;
-		//}
+		//if(m_position.x >= -FLOOR_SIZE)
+		//velocity = Vector3::Left;
+		if (kbState.Down)
+		{
+			m_angle--;
+		}
+		else
+		{
+			m_angle++;
+		}
 	}
 	else if (kbState.Right)
 	{
-		if(m_position.x <= FLOOR_SIZE)
-		velocity = Vector3::Right;
+		//if(m_position.x <= FLOOR_SIZE)
+		//velocity = Vector3::Right;
 
-		//if (kbState.Down)
-		//{
-		//	m_angle++;
-		//}
-		//else
-		//{
-		//	m_angle--;
-		//}
+		if (kbState.Down)
+		{
+			m_angle++;
+		}
+		else
+		{
+			m_angle--;
+		}
 	}
 	//velocity = Vector3::Forward;
 	
 	// ‘¬‚³‚ðŒvŽZ‚·‚é
 	velocity *= SPEED;
 
-	m_bullets->Update(m_position);
+	m_bullets->Update(m_position,m_angle);
 
 	if (kbState.Z)
 	{

@@ -36,6 +36,9 @@ private:
 	// ‘¬‚³
 	static const float SPEED;
 
+	//êŠO”ÍˆÍ
+	static const float FLOOR_SIZE;
+
 	//”­Ëó‘Ô
 	bool m_IsShoot;
 
@@ -44,7 +47,7 @@ public:
 	~Bullets();
 
 	void Initialize(CommonResources* resources);
-	void Update(DirectX::SimpleMath::Vector3 position);
+	void Update(DirectX::SimpleMath::Vector3 position,float angle);
 	void Render();
 	void Finalize();
 
