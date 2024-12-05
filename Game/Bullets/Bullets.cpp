@@ -3,8 +3,7 @@
 	@brief	プレイヤークラス
 */
 #include "pch.h"
-#include "Player.h"
-#include "Game/Bullets/Bullets.h"
+#include "Bullets.h"
 #include "Game/CommonResources.h"
 #include "DeviceResources.h"
 #include "Libraries/MyLib/DebugCamera.h"
@@ -19,11 +18,9 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 // 定数
-const float Player::SPEED = 0.05f;
+const float Bullets::SPEED = 0.05f;
 
-const float Player::FLOOR_SIZE = 5.5f;
-
-Player::Player()
+Bullets::Bullets()
 	:
 	m_commonResources{},
 	//m_basicEffect{},
@@ -34,15 +31,16 @@ Player::Player()
 	m_teapot{},
 	m_angle{},
 	m_position{},
-	m_bullets{}
+	m_velocity{},
+	m_IsShoot{}
 {
 }
 
-Player::~Player()
+Bullets::~Bullets()
 {
 }
 
-void Player::Initialize(CommonResources* resources)
+void Bullets::Initialize(CommonResources* resources)
 {
 	assert(resources);
 	m_commonResources = resources;
@@ -64,19 +62,21 @@ void Player::Initialize(CommonResources* resources)
 	);
 
 	// ジオメトリックプリミティブを生成する
-	m_teapot = GeometricPrimitive::CreateTeapot(context);
+	m_teapot = GeometricPrimitive::CreateSphere(context);
 
 	// 回転角を初期化する（度）
 	m_angle = 0.0f;
 
 	// 座標を初期化する
-	m_position = Vector3(-5.5f,0.0f,5.5f);
+	m_position = Vector3::Zero;
 
-	m_bullets = std::make_unique<Bullets>();
-	m_bullets->Initialize(resources);
+	//
+	m_velocity = Vector3::Zero;
+
+	m_IsShoot = false;
 }
 
-void Player::Update()
+void Bullets::Update(DirectX::SimpleMath::Vector3 position)
 {
 	// デバッグカメラを更新する
 	m_debugCamera->Update(m_commonResources->GetInputManager());
@@ -86,70 +86,23 @@ void Player::Update()
 	const auto& kbState = m_commonResources->GetInputManager()->GetKeyboardState();
 	const auto& tracker = m_commonResources->GetInputManager()->GetKeyboardTracker();
 
-	// 速さ
-	Vector3 velocity = Vector3::Zero;
 
-	// 前後移動
-	if (kbState.Up)
-	{
-		if(m_position.z >= -FLOOR_SIZE)
-		velocity = Vector3::Forward;
-	}
-	else if (kbState.Down)
-	{
-		if(m_position.z <= FLOOR_SIZE)
-		velocity = Vector3::Backward;
-	}
+	m_velocity = Vector3::Forward;
 
-	// 左右回転
-	if (kbState.Left)
-	{
-		if(m_position.x >= -FLOOR_SIZE)
-		velocity = Vector3::Left;
-		//if (kbState.Down)
-		//{
-		//	m_angle--;
-		//}
-		//else
-		//{
-		//	m_angle++;
-		//}
-	}
-	else if (kbState.Right)
-	{
-		if(m_position.x <= FLOOR_SIZE)
-		velocity = Vector3::Right;
-
-		//if (kbState.Down)
-		//{
-		//	m_angle++;
-		//}
-		//else
-		//{
-		//	m_angle--;
-		//}
-	}
-	//velocity = Vector3::Forward;
-	
 	// 速さを計算する
-	velocity *= SPEED;
-
-	m_bullets->Update(m_position);
-
-	if (kbState.Z)
+	m_velocity *= SPEED;
+	if (m_IsShoot == false)
 	{
-		m_bullets->SetIsShoot(true);
+		m_position = position;
 	}
-
-	// 回転角の値を-180度<=m_angle<=180度に収める
-	m_angle = std::min(std::max(m_angle, -180.0f), 180.0f);
-
-	// 移動ベクトルを計算し、座標に加算する
-	Matrix matrix = Matrix::CreateRotationY(XMConvertToRadians(m_angle));
-	m_position += Vector3::Transform(velocity, matrix);
+	else if (m_IsShoot == true)
+	{
+		m_position += m_velocity;
+	}
+	
 }
 
-void Player::Render()
+void Bullets::Render()
 {
 	auto context = m_commonResources->GetDeviceResources()->GetD3DDeviceContext();
 
@@ -157,13 +110,11 @@ void Player::Render()
 	Matrix view = m_debugCamera->GetViewMatrix();
 
 	// キューブのワールド行列を計算する
-	Matrix world = Matrix::CreateRotationY(XMConvertToRadians(m_angle));
-	world *= Matrix::CreateTranslation(m_position);
+	//Matrix world = Matrix::CreateRotationY(XMConvertToRadians(m_angle));
+	Matrix world = Matrix::CreateTranslation(m_position);
 
 	// ジオメトリックプリミティブを描画する
 	m_teapot->Draw(world, view, m_projection, Colors::White);
-
-	m_bullets->Render();
 
 	// デバッグ情報を「DebugString」で表示する
 	auto debugString = m_commonResources->GetDebugString();
@@ -171,6 +122,22 @@ void Player::Render()
 
 }
 
-void Player::Finalize()
+void Bullets::Finalize()
 {
+}
+
+void Bullets::Shoot()
+{
+	//// 速さ
+	//Vector3 velocity = Vector3::Zero;
+
+	//velocity = Vector3::Forward;
+
+	// 速さを計算する
+	//m_velocity *= SPEED;
+
+	// 移動ベクトルを計算し、座標に加算する
+	//Matrix matrix = Matrix::CreateRotationY(XMConvertToRadians(m_angle));
+	m_position += m_velocity;
+
 }

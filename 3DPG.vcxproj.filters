@@ -41,6 +41,9 @@
     <Filter Include="Game\Player">
       <UniqueIdentifier>{9870be2c-ba52-4831-91e5-ed65610cd321}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Bullets">
+      <UniqueIdentifier>{12ad6648-1e0d-48c7-93d7-ab0791ccf5fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -93,6 +96,9 @@
     <ClInclude Include="Game\Player\Player.h">
       <Filter>Game\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Bullets\Bullets.h">
+      <Filter>Game\Bullets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -133,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="Game\Player\Player.cpp">
       <Filter>Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Bullets\Bullets.cpp">
+      <Filter>Game\Bullets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

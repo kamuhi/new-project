@@ -5,15 +5,13 @@
 #pragma once
 //前方宣言
 class CommonResources;
-class Bullets;
 
 namespace mylib
 {
 	class DebugCamera;
-	class GridFloor;
 }
 
-class Player
+class Bullets
 {
 private:
 	//共通リソース
@@ -28,26 +26,30 @@ private:
 	//ジオメトリックプリミティブ
 	std::unique_ptr<DirectX::GeometricPrimitive> m_teapot;
 
-	//弾
-	std::unique_ptr<Bullets> m_bullets;
-
 	// 回転角（度）
 	float m_angle;
 	// 座標
 	DirectX::SimpleMath::Vector3 m_position;
+	//初速度
+	DirectX::SimpleMath::Vector3 m_velocity;
+
 	// 速さ
 	static const float SPEED;
 
-	//移動制限
-	static const float FLOOR_SIZE;
+	//発射状態
+	bool m_IsShoot;
 
 public:
-	Player();
-	~Player();
+	Bullets();
+	~Bullets();
 
 	void Initialize(CommonResources* resources);
-	void Update();
+	void Update(DirectX::SimpleMath::Vector3 position);
 	void Render();
 	void Finalize();
+
+	void SetIsShoot(bool isShoot) { m_IsShoot = isShoot; }
+
+	void Shoot();
 
 };
